@@ -79,7 +79,7 @@ def fetch_notices(url):
             'Subject': td_elements[i + 1].text.strip(),
             'Start Date': td_elements[i + 2].text.strip(),
             'End Date': td_elements[i + 3].text.strip(),
-            'Url': "http://www.ranaghatcollege.org.in/"+td_elements[i + 4].select_one('a')['href'].strip() if td_elements[i + 4].select_one('a') else '',
+            'Url': "http://www.ranaghatcollege.org.in/" + td_elements[i + 4].select_one('a')['href'].replace(' ', '%20').strip() if td_elements[i + 4].select_one('a') else '',
         }
         rows.append(row)
 
