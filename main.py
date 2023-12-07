@@ -2,7 +2,7 @@ import threading
 import requests
 from bs4 import BeautifulSoup
 import json
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from bot import TGBOT
 import time
 
@@ -11,46 +11,59 @@ tgbot = TGBOT('6301244999:AAHme6jcAJ0bOhLUwl8IIr_AKlAWloz59fQ')
 app = Flask(__name__)
 
 
-@app.post('/getTgRes')
+@app.route('/')
 def index():
+    return "Hello, world!"
+
+
+@app.route('/getTgRes', methods=['GET', 'POST'])
+def getTgRes():
     ResMsg = ""
-    data = request.get_json()
-    if data.get('message'):
-        userFName = data['message'].get('from', {}).get('first_name', '') + " " + data['message'].get('from', {}).get('last_name', '')
-        userName = data['message'].get('from', {}).get('username', '')
-        userID = data['message'].get('from', {}).get('id', '')
-        msg = data['message'].get('text', '')
+    if request.method == 'POST':
+        data = request.get_json()
+        if data.get('message'):
+            userFName = data['message'].get('from', {}).get(
+                'first_name', '') + " " + data['message'].get('from', {}).get('last_name', '')
+            userName = data['message'].get('from', {}).get('username', '')
+            userID = data['message'].get('from', {}).get('id', '')
+            msg = data['message'].get('text', '')
 
-        if msg == '/start':
-            ResMsg = f"Hello {userFName},\nTo receive all impending notices from Ranaghat College, send <b>/GetNotified</b> to ensure that you are informed quickly about any upcoming official notices."
+            if msg == '/start':
+                ResMsg = f"Hello {userFName},\nTo receive all impending notices from Ranaghat College, send <b>/GetNotified</b> to ensure that you are informed quickly about any upcoming official notices."
 
-            params = {
-                'chat_id': userID,
-                'text': ResMsg,
-                'parse_mode': 'HTML'
-            }
-            tgbot.sendMessage(params)
-        elif msg == '/GetNotified':
-            newUser = {
-                "name": userFName,
-                "username": userName,
-                "userID": userID
-            }
-            add_new_user_to_json(newUser)
-            ResMsg = f"This message is being sent to you because you have successfully joined the Ranaghat college notice community. From this point on, you will utilize this community to receive all future notices. Please refrain from responding on this unmonitored text channel."
-            params = {
-                'chat_id': userID,
-                'text': ResMsg,
-                'parse_mode': 'HTML'
-            }
-            tgbot.sendMessage(params)
+                params = {
+                    'chat_id': userID,
+                    'text': ResMsg,
+                    'parse_mode': 'HTML'
+                }
+                tgbot.sendMessage(params)
+            elif msg == '/GetNotified':
+                newUser = {
+                    "name": userFName,
+                    "username": userName,
+                    "userID": userID
+                }
+                add_new_user_to_json(newUser)
+                ResMsg = f"This message is being sent to you because you have successfully joined the Ranaghat college notice community. From this point on, you will utilize this community to receive all future notices. Please refrain from responding on this unmonitored text channel."
+                params = {
+                    'chat_id': userID,
+                    'text': ResMsg,
+                    'parse_mode': 'HTML'
+                }
+                tgbot.sendMessage(params)
+            else:
+                print(f"\n\nError : {msg}\n\n")
         else:
-            print(f"\n\nError : {msg}\n\n")
-    else:
-        print(data)
+            print(data)
 
-    print(type(data))
-    return "Hello World!"
+        return "Success..."
+    else:
+        return jsonify({
+            "message": "Method not allowed.",
+            "Method": request.method
+        })
+    # print(type(data))
+    # return "Hello World!"
 
 
 def fetch_notices(url):
