@@ -164,8 +164,8 @@ def add_new_user_to_json(new_user):
 
 
 if __name__ == "__main__":
-    t = threading.Thread(main)
+    t = threading.Thread(target=main, args=())
     t.daemon = True
     t.start()
-    
-    app.run(host='0.0.0.0', port=10000, debug=False)
+
+    app.run(host='0.0.0.0', port=10000, debug=False, threaded=True)
