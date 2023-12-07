@@ -29,7 +29,7 @@ def getTgRes():
             msg = data['message'].get('text', '')
 
             if msg == '/start':
-                ResMsg = f"Hello {userFName},\nTo receive all impending notices from Ranaghat College, send <b>/GetNotified</b> to ensure that you are informed quickly about any upcoming official notices."
+                ResMsg = f"Hello {userFName},\nTo receive all impending notices from Ranaghat College, send <b>/getnotified</b> to ensure that you are informed quickly about any upcoming official notices."
 
                 params = {
                     'chat_id': userID,
@@ -37,7 +37,7 @@ def getTgRes():
                     'parse_mode': 'HTML'
                 }
                 tgbot.sendMessage(params)
-            elif msg == '/GetNotified':
+            elif msg == '/getnotified':
                 newUser = {
                     "name": userFName,
                     "username": userName,
