@@ -15,13 +15,10 @@ app = Flask(__name__)
 def index():
     ResMsg = ""
     data = request.get_json()
-    if data['message']:
-        # user data
-        userFName = data['message']['from'].get(
-            'first_name', '') + " " + data['message']['from'].get('last_name', '')
-        userName = data['message']['from'].get('username', '')
-        userID = data['message']['from'].get('id', '')
-        # message data
+    if data.get('message'):
+        userFName = data['message'].get('from', {}).get('first_name', '') + " " + data['message'].get('from', {}).get('last_name', '')
+        userName = data['message'].get('from', {}).get('username', '')
+        userID = data['message'].get('from', {}).get('id', '')
         msg = data['message'].get('text', '')
 
         if msg == '/start':
