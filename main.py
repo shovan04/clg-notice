@@ -127,21 +127,19 @@ def send_notice_to_all_users(new_notice):
             }
             tgbot.sendMessage(params)
 
-
+@app.route('/cronUrl',methods=['GET', 'POST'])
 def main():
-    while True:
-        url = 'http://www.ranaghatcollege.org.in/notice.aspx'
-        # Fetch new notices
-        new_notices = fetch_notices(url)
-        try:
-            with open('output.json', 'r') as json_file:
-                existing_notices = json.load(json_file)
-            add_and_update_notices(existing_notices, new_notices)
-        except FileNotFoundError:
-            with open('output.json', 'w') as json_file:
-                json.dump(new_notices, json_file, indent=2)
-            print("Data has been saved for the first time.")
-        time.sleep(600)
+    url = 'http://www.ranaghatcollege.org.in/notice.aspx'
+    # Fetch new notices
+    new_notices = fetch_notices(url)
+    try:
+        with open('output.json', 'r') as json_file:
+            existing_notices = json.load(json_file)
+        add_and_update_notices(existing_notices, new_notices)
+    except FileNotFoundError:
+        with open('output.json', 'w') as json_file:
+            json.dump(new_notices, json_file, indent=2)
+        print("Data has been saved for the first time.")
 
 
 def check_and_update_user(users_list, new_user):
@@ -174,8 +172,4 @@ def add_new_user_to_json(new_user):
 
 
 if __name__ == "__main__":
-    t = threading.Thread(target=main, args=())
-    t.daemon = True
-    t.start()
-
-    app.run(host='0.0.0.0', port=10000, debug=False, threaded=True)
+    app.run(host='0.0.0.0', port=10000, debug=False)
